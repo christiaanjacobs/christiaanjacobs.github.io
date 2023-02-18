@@ -25,12 +25,12 @@
         }
 
         .filename{
-            text-align: center;
+            text-align: left;
             padding: 0 20px 0 10px;
 
         }
         .keyword {
-            text-align: center;
+            text-align: left;
             padding: 0 40px 0 40px;
         }
         .present {
@@ -43,6 +43,18 @@
             padding: 0 40px 0 40px;
 
         }
+        tr {
+            border-top: 1px solid gray;
+        }
+
+        audio{
+            padding: 10px 0 5px 0;
+        }
+        input[type="checkbox"]{
+            width: 30px;
+            height: 30px;
+        }
+
     </style>
 </head>
 
@@ -109,6 +121,7 @@
                 const presentCell = row.insertCell(3);
                 const musicCell = row.insertCell(4);
                 filenameCell.className = "filename"
+                audioCell.className = "audio"
                 keywordCell.className = "keyword"
                 presentCell.className = "present";
                 musicCell.className = "music"
@@ -116,6 +129,15 @@
 
                 const filename = document.createTextNode(value.name); 
                 filenameCell.appendChild(filename)
+
+               
+                // setTimeout(function (){  
+                //     const audio = document.createElement("audio");
+                //     audio.controls = true;
+                //     audio.preload = true;
+                //     audio.src = value.url;
+                //     audioCell.appendChild(audio);                                
+                //     }, 5000); // How long you want the delay to be, measured in milliseconds.
 
                 const audio = document.createElement("audio");
                 audio.controls = true;
@@ -130,7 +152,7 @@
 
                 const presentCheckbox = document.createElement("input");
                 presentCheckbox.type = "checkbox";
-                // checkbox.name = value.keyword;
+                presentCheckbox.name = "present-box";
                 presentCheckbox.checked = value.present;
                 presentCell.appendChild(presentCheckbox);
 
