@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta http-equiv="content-type" content="text/html" charset="utf-8">
+    <title>Demo Page</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            font-weight: 400;
+            font-size: 14px;
+            line-height: 26px;
+            margin: 0;
+        }
+        table {
+            display: block;
+            width: 100%;
+            border-collapse: collapse;
+            overflow: auto;
+        }
+        .content {
+            padding: 10px;
+        }
+
+        .filename{
+            text-align: center;
+            padding: 0 20px 0 10px;
+
+        }
+        .keyword {
+            text-align: center;
+            padding: 0 40px 0 40px;
+        }
+        .present {
+            text-align: center;
+            padding: 0 40px 0 40px;
+
+        }
+        .music {
+            text-align: center;
+            padding: 0 40px 0 40px;
+
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="content">
+        <h1>Some Instructions</h1>
+        <p>
+            Blah blah
+        </p>
+        <p>
+            <b>Todo:</b>
+            This is some stuff to do
+        </p>
+
+        <h2>Files</h2>
+        <table id="keywords">
+            <thead>
+                <tr>
+                    <th>Filename</th>
+                    <th>Utterance</th>
+                    <th>Keyword</th>
+                    <th>Present</th>
+                    <th>Music</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-app.js"
+        import { getDatabase, ref, onValue, update } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-database.js"
+
+        const firebaseConfig = {
+            databaseURL: "https://swahili-keyword-spotting-8c767-default-rtdb.europe-west1.firebasedatabase.app/"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+
+        // Initialize Realtime Database and get a reference to the service
+        const database = getDatabase(app);
+        
+        const itemRef = ref(database, "sheet1");
+        console.log(itemRef)
+
+        const table = document.getElementById("keywords");
+
+        onValue(itemRef, (snapshot) => {
+            snapshot.forEach((child) => {
+                const key = child.key;
+                const value = child.val();
+
+                console.log(key)
+                console.log(value)
+
+                const row = table.insertRow(-1);
+                row.className = "row"+key
+
+                const filenameCell = row.insertCell(0)    
+                const audioCell = row.insertCell(1);
+                const keywordCell = row.insertCell(2);
+                const presentCell = row.insertCell(3);
+                const musicCell = row.insertCell(4);
+                filenameCell.className = "filename"
+                keywordCell.className = "keyword"
+                presentCell.className = "present";
+                musicCell.className = "music"
+
+
+                const filename = document.createTextNode(value.name); 
+                filenameCell.appendChild(filename)
+
+                const audio = document.createElement("audio");
+                audio.controls = true;
+                audio.preload = true;
+                audio.src = value.url;
+                audioCell.appendChild(audio);
+
+
+                const keywordName = document.createTextNode(value.keyword)
+                keywordCell.appendChild(keywordName)
+
+
+                const presentCheckbox = document.createElement("input");
+                presentCheckbox.type = "checkbox";
+                // checkbox.name = value.keyword;
+                presentCheckbox.checked = value.present;
+                presentCell.appendChild(presentCheckbox);
+
+
+                const musicCheckbox = document.createElement("input");
+                musicCheckbox.type = "checkbox";
+                // checkbox.name = value.keyword;
+                musicCheckbox.checked = value.music;
+                musicCell.appendChild(musicCheckbox);
+
+                presentCheckbox.addEventListener("change", (event) => {
+                    // const checked = event.target.checked;
+                    // const updates = {"music":value.music, "keyword":value.keyword, "name":value.name, "present":event.target.checked, "url":value.url}
+                    const updates = {"present": event.target.checked};
+                    // console.log(updates)
+                    const nodeRef = ref(database, "sheet1/" + key);
+                    update(nodeRef, updates)
+                    presentCheckbox.checked = event.target.checked;
+                });
+
+                musicCheckbox.addEventListener("change", (event) => {
+                    // const checked = event.target.checked;
+                    const updates = {"music": event.target.checked};
+                    // console.log(updates)
+                    const nodeRef = ref(database, "sheet1/" + key);
+                    update(nodeRef, updates)
+                    musicCheckbox.checked = event.target.checked;
+                });
+
+
+            });
+        }, {
+            onlyOnce: true
+        });
+    </script>
+</body>
+</html>
