@@ -141,8 +141,11 @@
 
                 const audio = document.createElement("audio");
                 audio.controls = true;
-                audio.preload = true;
+                audio.preload = "none";
                 audio.src = value.url;
+                // audio.src = "../../radio/results_nathan/"+value.name;
+                // audio.src = '../media/christiaan/Samsung/swahili_hate/radio/features/wav/ghetto/1_Ghetto_FM_Goetana_2022-04-27_14_59_03-20_32_23.wav';
+                console.log(audio.src)
                 audioCell.appendChild(audio);
 
 
