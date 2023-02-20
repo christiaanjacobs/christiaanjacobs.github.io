@@ -259,6 +259,10 @@
                 presentCheckbox.type = "checkbox";
                 presentCheckbox.name = "present-box";
                 presentCheckbox.checked = value.present;
+                // if (presentCheckbox.checked){
+                //     presentCheckbox.disabled = true
+                //     presentCheckbox.style.opacity = "50%"
+                // }
                 presentCell.appendChild(presentCheckbox);
 
 
@@ -270,6 +274,11 @@
 
                 const commentText = document.createElement("input");
                 commentText.type = "text";
+                if (value.comment){
+                    commentText.value = value.comment
+                }else{
+                    commentText.value = ""
+                }
                 commentCell.appendChild(commentText);
 
 
@@ -277,8 +286,24 @@
                 completeCheckbox.type = "checkbox";
                 // checkbox.name = value.keyword;
                 completeCheckbox.id = "completeCheck";
-                completeCheckbox.checked = value.music;
+                completeCheckbox.checked = value.complete;
                 completeCell.appendChild(completeCheckbox);
+                if (completeCheckbox.checked){
+                    presentCheckbox.disabled = true;
+                    musicCheckbox.disabled = true;
+                    commentText.disabled = true;
+                    // console.log(completeCell)
+                    filenameCell.style.opacity = "0.5"
+                    audioCell.style.opacity = "0.5"
+                    keywordCell.style.opacity = "0.5"
+                    presentCell.style.opacity = "0.5"
+                    musicCell.style.opacity = "0.5"
+                    commentCell.style.opacity = "0.5"
+
+
+
+                }
+       
 
                 presentCheckbox.addEventListener("change", (event) => {
                     // const checked = event.target.checked;
@@ -302,7 +327,7 @@
                 completeCheckbox.addEventListener("change", (event) => {
                     let parentElement = document.getElementsByClassName(row.className);
                     // console.log(parentElement[0].getElementsByClassName(commentCell.className)[0].firstChild.value)
-                    const updates = {"compele": event.target.checked, 
+                    const updates = {"complete": event.target.checked, 
                                     "comment": parentElement[0].getElementsByClassName(commentCell.className)[0].firstChild.value};
                     // console.log(parentElement[0])
                     // let children = parentElement[0].getElementsByClassName(commentCell.className)
@@ -318,7 +343,7 @@
                         // console.log(elements)
                         for(var i = 0; i < elements.length-1; i++){
                             console.log(elements[i]);
-                            elements[i].style.opacity = "50%"
+                            elements[i].style.opacity = "0.5"
                             
                         }
                         elements[3].firstChild.disabled = true; 
@@ -330,7 +355,7 @@
                         // console.log(elements)
                         for(var i = 0; i < elements.length-1; i++){
                             console.log(elements[i]);
-                            elements[i].style.opacity = "100%"
+                            elements[i].style.opacity = "1"
 
                         }
                         elements[3].firstChild.disabled = false;
