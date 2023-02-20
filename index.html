@@ -19,16 +19,43 @@
             width: 100%;
             border-collapse: collapse;
             overflow: auto;
-        }
+            min-height: 700px;
+        }       
         .content {
             padding: 10px;
+        }
+
+        .filename-h{
+            min-width: 475px;
+        }
+        .utt-h{
+            min-width: 275px;
+        }
+        
+        .keyword-h{
+            min-width: 100px;
+        }
+
+        .present-h{
+            min-width: 100px;
+        }
+
+        .music-h{
+            min-width: 100px;
+        }
+
+        .comment-h{
+            min-width: 220px;
+        } 
+        .complete-h{
+            min-width: 100px;
         }
 
         .filename{
             text-align: left;
             padding: 0 20px 0 10px;
-
         }
+     
         .keyword {
             text-align: left;
             padding: 0 20px 0 20px;
@@ -157,8 +184,9 @@
         }
     } */
 
-
-
+/* button{
+    border-radius: 50%;
+} */
 
     </style>
 </head>
@@ -178,20 +206,25 @@
         <table id="keywords">
             <thead>
                 <tr>
-                    <th>Filename</th>
-                    <th>Utterance</th>
-                    <th>Keyword</th>
-                    <th>Present</th>
-                    <th>Music</th>
-                    <th>Comments</th>
-                    <th>Completed</th>
-
-
+                    <th class="filename-h">Filename</th>
+                    <th class="utt-h">Utterance</th>
+                    <th class="keyword-h">Keyword</th>
+                    <th class="present-h">Present</th>
+                    <th class="music-h">Music</th>
+                    <th class=comment-h>Comments</th>
+                    <th class="complete-h">Completed</th>
                 </tr>
             </thead>
             <tbody>
+
             </tbody>
         </table>
+        <button id="prevPage">Prev</button>
+        <button id="nextPage">Next</button>
+        <p id="pageNum"></p>
+        <!-- <a href="#" class="previous round">&#8249;</a>
+        <a href="#" class="next round">&#8250;</a> -->
+
     </div>
     
     <script src="https://apis.google.com/js/api.js"></script>
@@ -212,166 +245,219 @@
         const itemRef = ref(database, "sheet1");
         // console.log(itemRef)
 
-        const table = document.getElementById("keywords");
+        // const table = document.getElementById("keywords");
+        // table.innerHTML = "";
 
-        onValue(itemRef, (snapshot) => {
-            snapshot.forEach((child) => {
-                const key = child.key;
-                const value = child.val();
+        const pageSize = 10; // number of rows to show per page
+        let currentPage = 1; // keep track of the current page
 
-                // console.log(key)
-                // console.log(value)
+        function renderPage(page) {
+        // calculate the start and end indices of the rows to show on this page
+            const start = (page - 1) * pageSize;
+            const end = start + pageSize;
 
-                const row = table.insertRow(-1);
-                row.className = "row"+key
+            // clear the current table rows
+            const table = document.querySelector("#keywords tbody");
+            table.innerHTML = "";
 
-                const filenameCell = row.insertCell(0)    
-                const audioCell = row.insertCell(1);
-                const keywordCell = row.insertCell(2);
-                const presentCell = row.insertCell(3);
-                const musicCell = row.insertCell(4);
-                const commentCell = row.insertCell(5)
-                const completeCell = row.insertCell(6)
-                
-                filenameCell.className = "filename"
-                audioCell.className = "audio"
-                keywordCell.className = "keyword"
-                presentCell.className = "present";
-                musicCell.className = "music"
-                commentCell.className = "comment"
-                completeCell.className = "complete"
+            // iterate over the data snapshot and add table rows for the current page
+            let cur_i = 0;
+            onValue(itemRef, (snapshot) => {
+                snapshot.forEach((child) => {
 
+                    if (cur_i >= start && cur_i < end) {
 
-                const filename = document.createTextNode(value.name); 
-                filenameCell.appendChild(filename)
-                const audio = document.createElement("audio");
-                audio.controls = true;
-                audio.preload = "none";
-                audio.src = value.url;
-                audioCell.appendChild(audio);
+                    
+                    const key = child.key;
+                    const value = child.val();
 
+                    // console.log(key)
+                    // console.log(value)
 
-                const keywordName = document.createTextNode(value.keyword)
-                keywordCell.appendChild(keywordName)
+                    const row = table.insertRow(-1);
+                    row.className = "row"+key
 
-
-                const presentCheckbox = document.createElement("input");
-                presentCheckbox.type = "checkbox";
-                presentCheckbox.name = "present-box";
-                presentCheckbox.checked = value.present;
-                // if (presentCheckbox.checked){
-                //     presentCheckbox.disabled = true
-                //     presentCheckbox.style.opacity = "50%"
-                // }
-                presentCell.appendChild(presentCheckbox);
+                    const filenameCell = row.insertCell(0)    
+                    const audioCell = row.insertCell(1);
+                    const keywordCell = row.insertCell(2);
+                    const presentCell = row.insertCell(3);
+                    const musicCell = row.insertCell(4);
+                    const commentCell = row.insertCell(5)
+                    const completeCell = row.insertCell(6)
+                    
+                    filenameCell.className = "filename"
+                    audioCell.className = "audio"
+                    keywordCell.className = "keyword"
+                    presentCell.className = "present";
+                    musicCell.className = "music"
+                    commentCell.className = "comment"
+                    completeCell.className = "complete"
 
 
-                const musicCheckbox = document.createElement("input");
-                musicCheckbox.type = "checkbox";
-                // checkbox.name = value.keyword;
-                musicCheckbox.checked = value.music;
-                musicCell.appendChild(musicCheckbox);
-
-                const commentText = document.createElement("input");
-                commentText.type = "text";
-                if (value.comment){
-                    commentText.value = value.comment
-                }else{
-                    commentText.value = ""
-                }
-                commentCell.appendChild(commentText);
+                    const filename = document.createTextNode(value.name); 
+                    filenameCell.appendChild(filename)
+                    const audio = document.createElement("audio");
+                    audio.controls = true;
+                    audio.preload = "none";
+                    audio.src = value.url;
+                    audioCell.appendChild(audio);
 
 
-                const completeCheckbox = document.createElement("input");
-                completeCheckbox.type = "checkbox";
-                // checkbox.name = value.keyword;
-                completeCheckbox.id = "completeCheck";
-                completeCheckbox.checked = value.complete;
-                completeCell.appendChild(completeCheckbox);
-                if (completeCheckbox.checked){
-                    presentCheckbox.disabled = true;
-                    musicCheckbox.disabled = true;
-                    commentText.disabled = true;
-                    // console.log(completeCell)
-                    filenameCell.style.opacity = "0.5"
-                    audioCell.style.opacity = "0.5"
-                    keywordCell.style.opacity = "0.5"
-                    presentCell.style.opacity = "0.5"
-                    musicCell.style.opacity = "0.5"
-                    commentCell.style.opacity = "0.5"
+                    const keywordName = document.createTextNode(value.keyword)
+                    keywordCell.appendChild(keywordName)
 
 
-
-                }
-       
-
-                presentCheckbox.addEventListener("change", (event) => {
-                    // const checked = event.target.checked;
-                    // const updates = {"music":value.music, "keyword":value.keyword, "name":value.name, "present":event.target.checked, "url":value.url}
-                    const updates = {"present": event.target.checked};
-                    // console.log(updates)
-                    const nodeRef = ref(database, "sheet1/" + key);
-                    update(nodeRef, updates)
-                    presentCheckbox.checked = event.target.checked;
-                });
-
-                musicCheckbox.addEventListener("change", (event) => {
-                    // const checked = event.target.checked;
-                    const updates = {"music": event.target.checked};
-                    // console.log(updates)
-                    const nodeRef = ref(database, "sheet1/" + key);
-                    update(nodeRef, updates)
-                    musicCheckbox.checked = event.target.checked;
-                });
-
-                completeCheckbox.addEventListener("change", (event) => {
-                    let parentElement = document.getElementsByClassName(row.className);
-                    // console.log(parentElement[0].getElementsByClassName(commentCell.className)[0].firstChild.value)
-                    const updates = {"complete": event.target.checked, 
-                                    "comment": parentElement[0].getElementsByClassName(commentCell.className)[0].firstChild.value};
-                    // console.log(parentElement[0])
-                    // let children = parentElement[0].getElementsByClassName(commentCell.className)
-                    // console.log(children)
-                    // console.log(updates)
-                    const nodeRef = ref(database, "sheet1/" + key);
-                    update(nodeRef, updates)
+                    const presentCheckbox = document.createElement("input");
+                    presentCheckbox.type = "checkbox";
+                    presentCheckbox.name = "present-box";
+                    presentCheckbox.checked = value.present;
+                    // if (presentCheckbox.checked){
+                    //     presentCheckbox.disabled = true
+                    //     presentCheckbox.style.opacity = "50%"
+                    // }
+                    presentCell.appendChild(presentCheckbox);
 
 
+                    const musicCheckbox = document.createElement("input");
+                    musicCheckbox.type = "checkbox";
+                    // checkbox.name = value.keyword;
+                    musicCheckbox.checked = value.music;
+                    musicCell.appendChild(musicCheckbox);
 
-                    if (event.target.checked){  
-                        var elements = document.getElementsByClassName(row.className)[0].children;
-                        // console.log(elements)
-                        for(var i = 0; i < elements.length-1; i++){
-                            console.log(elements[i]);
-                            elements[i].style.opacity = "0.5"
-                            
-                        }
-                        elements[3].firstChild.disabled = true; 
-                        elements[4].firstChild.disabled = true
-                        elements[5].firstChild.disabled = true 
-
+                    const commentText = document.createElement("input");
+                    commentText.type = "text";
+                    if (value.comment){
+                        commentText.value = value.comment
                     }else{
-                        var elements = document.getElementsByClassName(row.className)[0].children;
-                        // console.log(elements)
-                        for(var i = 0; i < elements.length-1; i++){
-                            console.log(elements[i]);
-                            elements[i].style.opacity = "1"
-
-                        }
-                        elements[3].firstChild.disabled = false;
-                        elements[4].firstChild.disabled = false 
-                        elements[5].firstChild.disabled = false
+                        commentText.value = ""
                     }
-                    completeCheckbox.checked = event.target.checked;
+                    commentCell.appendChild(commentText);
 
 
+                    const completeCheckbox = document.createElement("input");
+                    completeCheckbox.type = "checkbox";
+                    // checkbox.name = value.keyword;
+                    completeCheckbox.id = "completeCheck";
+                    completeCheckbox.checked = value.complete;
+                    completeCell.appendChild(completeCheckbox);
+                    if (completeCheckbox.checked){
+                        presentCheckbox.disabled = true;
+                        musicCheckbox.disabled = true;
+                        commentText.disabled = true;
+                        // console.log(completeCell)
+                        filenameCell.style.opacity = "0.5"
+                        audioCell.style.opacity = "0.5"
+                        keywordCell.style.opacity = "0.5"
+                        presentCell.style.opacity = "0.5"
+                        musicCell.style.opacity = "0.5"
+                        commentCell.style.opacity = "0.5"
+
+
+
+                    }       
+
+                    presentCheckbox.addEventListener("change", (event) => {
+                        // const checked = event.target.checked;
+                        // const updates = {"music":value.music, "keyword":value.keyword, "name":value.name, "present":event.target.checked, "url":value.url}
+                        const updates = {"present": event.target.checked};
+                        // console.log(updates)
+                        const nodeRef = ref(database, "sheet1/" + key);
+                        update(nodeRef, updates)
+                        presentCheckbox.checked = event.target.checked;
+                    });
+
+                    musicCheckbox.addEventListener("change", (event) => {
+                        // const checked = event.target.checked;
+                        const updates = {"music": event.target.checked};
+                        // console.log(updates)
+                        const nodeRef = ref(database, "sheet1/" + key);
+                        update(nodeRef, updates)
+                        musicCheckbox.checked = event.target.checked;
+                    });
+
+                    completeCheckbox.addEventListener("change", (event) => {
+                        let parentElement = document.getElementsByClassName(row.className);
+                        // console.log(parentElement[0].getElementsByClassName(commentCell.className)[0].firstChild.value)
+                        const updates = {"complete": event.target.checked, 
+                                        "comment": parentElement[0].getElementsByClassName(commentCell.className)[0].firstChild.value};
+                        // console.log(parentElement[0])
+                        // let children = parentElement[0].getElementsByClassName(commentCell.className)
+                        // console.log(children)
+                        // console.log(updates)
+                        const nodeRef = ref(database, "sheet1/" + key);
+                        update(nodeRef, updates)
+
+
+
+                        if (event.target.checked){  
+                            var elements = document.getElementsByClassName(row.className)[0].children;
+                            // console.log(elements)
+                            for(var i = 0; i < elements.length-1; i++){
+                                console.log(elements[i]);
+                                elements[i].style.opacity = "0.5"
+                                
+                            }
+                            elements[3].firstChild.disabled = true; 
+                            elements[4].firstChild.disabled = true
+                            elements[5].firstChild.disabled = true 
+
+                        }else{
+                            var elements = document.getElementsByClassName(row.className)[0].children;
+                            // console.log(elements)
+                            for(var i = 0; i < elements.length-1; i++){
+                                console.log(elements[i]);
+                                elements[i].style.opacity = "1"
+
+                            }
+                            elements[3].firstChild.disabled = false;
+                            elements[4].firstChild.disabled = false 
+                            elements[5].firstChild.disabled = false
+                        }
+                        completeCheckbox.checked = event.target.checked;
+
+
+                    });
+                    
+                
+
+                }
+                cur_i++;
+                    console.log(cur_i)
                 });
-
-
+            
+            }, {
+                onlyOnce: true
             });
-        }, {
-            onlyOnce: true
-        });
+        
+                // update the pagination buttons
+                const prevButton = document.getElementById("prevPage");
+                const nextButton = document.getElementById("nextPage");
+                document.getElementById("pageNum").innerHTML = page+"/"+(390/pageSize)
+                prevButton.disabled = (page === 1);
+                console.log(page)
+                console.log(cur_i)
+                console.log(end)
+                    nextButton.disabled = (page === 39);
+  
+    
+    }
+        // render the first page on initial load
+    renderPage(currentPage);
+
+    // add event listeners to the pagination buttons
+    const prevButton = document.getElementById("prevPage");
+    const nextButton = document.getElementById("nextPage");
+    prevButton.addEventListener("click", () => {
+    if (currentPage > 1) {
+        currentPage--;
+        renderPage(currentPage);
+    }
+    });
+    nextButton.addEventListener("click", () => {
+    currentPage++;
+    renderPage(currentPage);
+    });
+
     </script>
 </body>
 </html>
