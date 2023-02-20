@@ -4,7 +4,7 @@
 <head>
 
     <meta http-equiv="content-type" content="text/html" charset="utf-8">
-    <title>Demo Page</title>
+    <title>Swahili Listen</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
         body {
@@ -31,29 +31,134 @@
         }
         .keyword {
             text-align: left;
-            padding: 0 40px 0 40px;
+            padding: 0 20px 0 20px;
         }
         .present {
             text-align: center;
-            padding: 0 40px 0 40px;
+            padding: 0 20px 0 20px;
 
         }
         .music {
             text-align: center;
-            padding: 0 40px 0 40px;
+            padding: 0 20px 0 20px;
+
+        }
+        .comment {
+            text-align: center;
+            padding: 0 20px 0 20px;
+
+        }
+        .complete {
+            text-align: center;
+            padding: 0 20px 0 20px;
 
         }
         tr {
             border-top: 1px solid gray;
+            /* background-color: blue; */
+            /* color: violet; */
         }
 
+        /* .row0{
+            background-color: blue;
+        } */
         audio{
             padding: 10px 0 5px 0;
+            width: 250px;
+            height: 40px;
         }
-        input[type="checkbox"]{
+        
+        /* input[type="checkbox"]{
             width: 30px;
             height: 30px;
+        } */
+
+
+        input[type="checkbox"]{
+        /* opacity: 0; */
+            width: 25px;
+            height: 25px;
+            background-color: white;
+            border-radius: 50%;
+            vertical-align: middle;
+            border: 1.5px solid gray;
+            appearance: none;
+            -webkit-appearance: none;
+            outline: none;
+            cursor: pointer;
         }
+
+
+        
+        input[type="checkbox"]:checked {
+            background-color: royalblue;
+            border-color: royalblue;
+
+        }
+
+
+        input#completeCheck{
+        /* opacity: 0; */
+            width: 25px;
+            height: 25px;
+            background-color: white;
+            border: 1.5px solid gray;
+   
+        }
+                
+        input#completeCheck:checked {
+            background-color: limegreen;
+            border-color: limegreen;
+
+        }
+
+
+        input[type="text"]{
+            border-radius: 5px;
+            border-color: lightgray;
+            border-width: 1px;
+            height: 20px;
+            border-top-style: solid;
+            border-right-style: solid;
+            border-left-style: solid;
+            border-bottom-style: solid;
+                    }
+
+
+    /* } */
+/* 
+    .check {
+        width: 30px;
+        height: 30px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        border-radius: 100px;
+        background-color: #FFF;
+        border: 2px solid #00EA90;
+        box-shadow: 0px 0px 0px 0px #00EA90 inset;
+        transition: all 0.15s cubic-bezier(0, 1.05, 0.72, 1.07);
+
+        &::after {
+            content: '';
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            z-index: 4;
+            position: absolute;
+            transform: scale(0);
+            background-size: 50%;
+            background-image: url('https://s6.picofile.com/d/8392306668/bacc888c-bed7-41a9-bf24-f6ff0718f471/checkmark.svg');
+            background-repeat: no-repeat;
+            background-position: center;
+            transition-delay: 0.2s !important;
+            transition: all 0.25s cubic-bezier(0, 1.05, 0.72, 1.07);
+        }
+    } */
+
+
+
 
     </style>
 </head>
@@ -61,16 +166,15 @@
 <body>
 
     <div class="content">
-        <h1>Some Instructions</h1>
+        <!-- <h1>Some Instructions</h1>
         <p>
             Blah blah
         </p>
         <p>
             <b>Todo:</b>
             This is some stuff to do
-        </p>
+        </p> -->
 
-        <h2>Files</h2>
         <table id="keywords">
             <thead>
                 <tr>
@@ -79,6 +183,10 @@
                     <th>Keyword</th>
                     <th>Present</th>
                     <th>Music</th>
+                    <th>Comments</th>
+                    <th>Completed</th>
+
+
                 </tr>
             </thead>
             <tbody>
@@ -102,7 +210,7 @@
         const database = getDatabase(app);
         
         const itemRef = ref(database, "sheet1");
-        console.log(itemRef)
+        // console.log(itemRef)
 
         const table = document.getElementById("keywords");
 
@@ -122,71 +230,24 @@
                 const keywordCell = row.insertCell(2);
                 const presentCell = row.insertCell(3);
                 const musicCell = row.insertCell(4);
+                const commentCell = row.insertCell(5)
+                const completeCell = row.insertCell(6)
+                
                 filenameCell.className = "filename"
                 audioCell.className = "audio"
                 keywordCell.className = "keyword"
                 presentCell.className = "present";
                 musicCell.className = "music"
+                commentCell.className = "comment"
+                completeCell.className = "complete"
 
 
                 const filename = document.createTextNode(value.name); 
                 filenameCell.appendChild(filename)
-
-               
-                // setTimeout(function (){  
-                //     const audio = document.createElement("audio");
-                //     audio.controls = true;
-                //     audio.preload = true;
-                //     audio.src = value.url;
-                //     audioCell.appendChild(audio);                                
-                //     }, 5000); // How long you want the delay to be, measured in milliseconds.
-
                 const audio = document.createElement("audio");
                 audio.controls = true;
                 audio.preload = "none";
-
-                // const fileUrl = value.url;
-                // const fileId = fileUrl.split('/')[5];
-                // console.log(fileId)
-
-                // gapi.load("client", () => {
-                //     gapi.client.init({
-                //         apiKey: "AIzaSyBWQTRMEhErYyx19pi8LTzgzppuLkMD6VU",
-                //         discoveryDocs: ['https://www.googleapis.com/discovery/v1/apis/drive/v3/rest'],
-                //         clientId: '1081098755703-rnt411birae6a2u2gitrg8do01m6ub19.apps.googleusercontent.com',
-                //         scope: 'https://www.googleapis.com/auth/drive.readonly',
-                //     }).then(() => {
-                //         // Fetch the file metadata from Google Drive
-                //         gapi.client.drive.files.get({
-                //         fileId: fileId,
-                //         fields: 'id, name, mimeType, size, webContentLink',
-                //         }).then((response) => {
-                //         // Once the metadata is fetched, download the file content
-                //         const webContentLink = response.result.webContentLink;
-                //         fetch(webContentLink, {
-                //             method: 'GET',
-                //             headers: {
-                //             'Authorization': `Bearer ${gapi.auth.getToken().access_token}`,
-                //             },
-                //         }).then((response) => {
-                //             // Once the file content is fetched, do something with it
-                //             const reader = new FileReader();
-                //             reader.readAsText(response.body.getReader());
-                //             reader.onload = (event) => {
-                //             const fileContent = event.target.result;
-                //             console.log(fileContent);
-                //             };
-                //         });
-                //         });
-                //     });
-
-                //     });    
-            
-
                 audio.src = value.url;
-                // audio.src = "../../radio/results_nathan/"+value.name;
-                // audio.src = '../media/christiaan/Samsung/swahili_hate/radio/features/wav/ghetto/1_Ghetto_FM_Goetana_2022-04-27_14_59_03-20_32_23.wav';
-                // console.log(audio.src)
                 audioCell.appendChild(audio);
 
 
@@ -207,6 +268,18 @@
                 musicCheckbox.checked = value.music;
                 musicCell.appendChild(musicCheckbox);
 
+                const commentText = document.createElement("input");
+                commentText.type = "text";
+                commentCell.appendChild(commentText);
+
+
+                const completeCheckbox = document.createElement("input");
+                completeCheckbox.type = "checkbox";
+                // checkbox.name = value.keyword;
+                completeCheckbox.id = "completeCheck";
+                completeCheckbox.checked = value.music;
+                completeCell.appendChild(completeCheckbox);
+
                 presentCheckbox.addEventListener("change", (event) => {
                     // const checked = event.target.checked;
                     // const updates = {"music":value.music, "keyword":value.keyword, "name":value.name, "present":event.target.checked, "url":value.url}
@@ -224,6 +297,49 @@
                     const nodeRef = ref(database, "sheet1/" + key);
                     update(nodeRef, updates)
                     musicCheckbox.checked = event.target.checked;
+                });
+
+                completeCheckbox.addEventListener("change", (event) => {
+                    let parentElement = document.getElementsByClassName(row.className);
+                    // console.log(parentElement[0].getElementsByClassName(commentCell.className)[0].firstChild.value)
+                    const updates = {"compele": event.target.checked, 
+                                    "comment": parentElement[0].getElementsByClassName(commentCell.className)[0].firstChild.value};
+                    // console.log(parentElement[0])
+                    // let children = parentElement[0].getElementsByClassName(commentCell.className)
+                    // console.log(children)
+                    // console.log(updates)
+                    const nodeRef = ref(database, "sheet1/" + key);
+                    update(nodeRef, updates)
+
+
+
+                    if (event.target.checked){  
+                        var elements = document.getElementsByClassName(row.className)[0].children;
+                        // console.log(elements)
+                        for(var i = 0; i < elements.length-1; i++){
+                            console.log(elements[i]);
+                            elements[i].style.opacity = "50%"
+                            
+                        }
+                        elements[3].firstChild.disabled = true; 
+                        elements[4].firstChild.disabled = true
+                        elements[5].firstChild.disabled = true 
+
+                    }else{
+                        var elements = document.getElementsByClassName(row.className)[0].children;
+                        // console.log(elements)
+                        for(var i = 0; i < elements.length-1; i++){
+                            console.log(elements[i]);
+                            elements[i].style.opacity = "100%"
+
+                        }
+                        elements[3].firstChild.disabled = false;
+                        elements[4].firstChild.disabled = false 
+                        elements[5].firstChild.disabled = false
+                    }
+                    completeCheckbox.checked = event.target.checked;
+
+
                 });
 
 
