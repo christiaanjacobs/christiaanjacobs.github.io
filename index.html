@@ -145,42 +145,42 @@
                 audio.controls = true;
                 audio.preload = "none";
 
-                const fileUrl = value.url;
-                const fileId = fileUrl.split('/')[5];
-                console.log(fileId)
+                // const fileUrl = value.url;
+                // const fileId = fileUrl.split('/')[5];
+                // console.log(fileId)
 
-                gapi.load("client", () => {
-                    gapi.client.init({
-                        apiKey: "AIzaSyBWQTRMEhErYyx19pi8LTzgzppuLkMD6VU",
-                        discoveryDocs: ['https://www.googleapis.com/discovery/v1/apis/drive/v3/rest'],
-                        clientId: '1081098755703-rnt411birae6a2u2gitrg8do01m6ub19.apps.googleusercontent.com',
-                        scope: 'https://www.googleapis.com/auth/drive.readonly',
-                    }).then(() => {
-                        // Fetch the file metadata from Google Drive
-                        gapi.client.drive.files.get({
-                        fileId: fileId,
-                        fields: 'id, name, mimeType, size, webContentLink',
-                        }).then((response) => {
-                        // Once the metadata is fetched, download the file content
-                        const webContentLink = response.result.webContentLink;
-                        fetch(webContentLink, {
-                            method: 'GET',
-                            headers: {
-                            'Authorization': `Bearer ${gapi.auth.getToken().access_token}`,
-                            },
-                        }).then((response) => {
-                            // Once the file content is fetched, do something with it
-                            const reader = new FileReader();
-                            reader.readAsText(response.body.getReader());
-                            reader.onload = (event) => {
-                            const fileContent = event.target.result;
-                            console.log(fileContent);
-                            };
-                        });
-                        });
-                    });
+                // gapi.load("client", () => {
+                //     gapi.client.init({
+                //         apiKey: "AIzaSyBWQTRMEhErYyx19pi8LTzgzppuLkMD6VU",
+                //         discoveryDocs: ['https://www.googleapis.com/discovery/v1/apis/drive/v3/rest'],
+                //         clientId: '1081098755703-rnt411birae6a2u2gitrg8do01m6ub19.apps.googleusercontent.com',
+                //         scope: 'https://www.googleapis.com/auth/drive.readonly',
+                //     }).then(() => {
+                //         // Fetch the file metadata from Google Drive
+                //         gapi.client.drive.files.get({
+                //         fileId: fileId,
+                //         fields: 'id, name, mimeType, size, webContentLink',
+                //         }).then((response) => {
+                //         // Once the metadata is fetched, download the file content
+                //         const webContentLink = response.result.webContentLink;
+                //         fetch(webContentLink, {
+                //             method: 'GET',
+                //             headers: {
+                //             'Authorization': `Bearer ${gapi.auth.getToken().access_token}`,
+                //             },
+                //         }).then((response) => {
+                //             // Once the file content is fetched, do something with it
+                //             const reader = new FileReader();
+                //             reader.readAsText(response.body.getReader());
+                //             reader.onload = (event) => {
+                //             const fileContent = event.target.result;
+                //             console.log(fileContent);
+                //             };
+                //         });
+                //         });
+                //     });
 
-                    });    
+                //     });    
             
 
                 audio.src = value.url;
