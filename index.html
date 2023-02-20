@@ -95,14 +95,9 @@
             height: 40px;
         }
         
-        /* input[type="checkbox"]{
-            width: 30px;
-            height: 30px;
-        } */
-
+     
 
         input[type="checkbox"]{
-        /* opacity: 0; */
             width: 25px;
             height: 25px;
             background-color: white;
@@ -122,20 +117,43 @@
             border-color: royalblue;
 
         }
-
-
+ 
         input#completeCheck{
-        /* opacity: 0; */
+            /* width: 25px;
+            height: 25px; */
+            border-radius: 15%;
+            text-align: center;
+
+       } 
+
+        /* input#completeCheck:after{        
+           content: "";
+        } */
+        input#completeCheck:checked{        
             width: 25px;
             height: 25px;
-            background-color: white;
+            border-radius: 15%;
             border: 1.5px solid gray;
-   
+            text-align: center;
+            background-color: white;
+            border-color: limegreen;
+
         }
                 
-        input#completeCheck:checked {
-            background-color: limegreen;
-            border-color: limegreen;
+        input#completeCheck:checked:after {
+            /* background-color: white; */
+            /* border-color: limegreen; */
+            content: "✓";
+            font-size: 20px;
+            color: limegreen;
+            width: 10px;
+            height: 10px;
+            /* position: absolute; */
+
+            /* background: #0a0; */
+
+            
+            /* color: black; */
 
         }
 
@@ -298,7 +316,7 @@
                     filenameCell.appendChild(filename)
                     const audio = document.createElement("audio");
                     audio.controls = true;
-                    audio.preload = "none";
+                    audio.preload = "true";
                     audio.src = value.url;
                     audioCell.appendChild(audio);
 
