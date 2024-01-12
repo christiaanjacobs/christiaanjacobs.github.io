@@ -1,6 +1,6 @@
 # Tasks
 
-- [ ] Define project scope
+- [x] Define project scope
   - [ ] Identify key features
   - [ ] Set project goals
 - [ ] Create wireframes
